@@ -129,7 +129,7 @@ Số liệu Mục 4–5 lấy từ một lần đo tự động tôi chạy ngà
 
 Tải nền 30 user, 2 instance. Số lấy từ Phụ lục B6 (17:33:23, cửa sổ 1 phút); ảnh Grafana chụp trước đó khoảng 2 phút nên lệch nhẹ.
 
-**1. p95 và avg là bao nhiêu, khoảng cách nói lên điều gì?** p95 = 293.9 ms, avg = 235.6 ms. Hai số khá gần nhau vì tỉ lệ request chậm (3%) thấp hơn 5% nên p95 chưa chạm tới nhóm chậm. Đuôi chậm chỉ lộ ở p99: trên biểu đồ Grafana, đường p99 ở khoảng 1.8 giây, cao hơn nhiều so với avg. Chỉ nhìn avg hoặc p95 ở đây sẽ không thấy nhóm request chậm này.
+**1. p95 và avg là bao nhiêu, khoảng cách nói lên điều gì?** p95 = 293.9 ms, avg = 235.6 ms. Hai số khá gần nhau vì tỉ lệ request chậm (3%) thấp hơn 5% nên p95 chưa chạm tới nhóm chậm. Đuôi chậm chỉ lộ ở p99: trên biểu đồ Grafana, đường p99 ở khoảng 1.8 giây, cao hơn nhiều so với avg. Chỉ nhìn avg hoặc p95 ở đây sẽ không thấy nhóm request chậm này. Error ratio cùng thời điểm là 0.009737, khoảng 0.97% (Phụ lục B6; ảnh Grafana chụp trước đó hiện 0.99%), phù hợp với tỉ lệ lỗi 1% của mock.
 
 **2. Nginx có chia đều traffic cho 2 instance không?** Có: 9.327 và 9.345 req/s. Lúc có 3 instance là 20.45, 20.8 và 20.76 req/s.
 

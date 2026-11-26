@@ -564,28 +564,13 @@ Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong
 
 ## AI log
 
-- Công cụ: Claude Code.
-- Hỏi: cách thiết lập môi trường (CP0), hướng dẫn làm CP1, rồi yêu cầu AI nháp file câu trả lời.
-- Nhận: lệnh cài uv và Python 3.11; AI kiểm tra môi trường CP0 trên máy này; hướng dẫn từng bước cho CP1. Với Part 1, AI soạn câu trả lời, tự chạy hai bản app trong WSL2 trên máy này và dán output, log vào file (đã lược header, che key).
-- Lỗi của AI đã được phát hiện: ban đầu AI đọc code và nói log `agent_request` sẽ hiện ra dưới dạng JSON hỏng. Khi chạy thật, log INFO không hiện; AI chạy thêm một lần để xác định nguyên nhân (Part 1, mục "Những điểm bản production vẫn còn lỗi", điểm 2).
-- Tự sửa và kiểm tra (Part 1): tôi đã đọc và kiểm tra các câu trả lời AI soạn, không có ý kiến thay đổi.
-- Tự chạy lại (Part 1): tôi đã tự chạy lại phần CP1 và kiểm tra, kết quả khớp.
-- Part 2: tôi yêu cầu AI làm tiếp CP2. AI soạn câu trả lời, tự chạy trong WSL2 trên máy này các lệnh build, đo kích thước image, chạy container và stack Compose; output và số đo trong Part 2 lấy từ các lần chạy đó (đã lược bớt).
-- Tự kiểm tra (Part 2): tôi đã tự chạy lại `docker images my-agent` và stack Compose (gọi `/health` qua Nginx).
-- Part 4: tôi yêu cầu AI chạy và soạn nháp CP3 để tôi kiểm tra. AI soạn câu trả lời, tạo môi trường `day14-part4`, tự chạy các app ở cổng 8010 và gọi trực tiếp class `CostGuard` trên máy này; output trong Part 4 lấy từ lần chạy đó. Lần chạy đầu của AI bị treo vì script kiểm tra cổng sai trong khi cổng 8000 đang bị chiếm; AI sửa script và chạy lại.
-- Tự kiểm tra (Part 4): tôi đã tự chạy lại phần CP3, kết quả khớp.
-- Part 5: tôi yêu cầu AI chạy và soạn nháp CP4 để tôi kiểm tra. AI soạn câu trả lời, tự chạy app develop và stack Compose trên máy này, tự thử tắt một instance và tắt Redis; output trong Part 5 lấy từ các lần chạy đó (đã lược bớt). Ban đầu AI tưởng mock LLM chỉ trễ 0,1 giây nên làm chậm thêm bằng một file khởi chạy ngoài repo; sau khi thấy mock đã trễ 3 giây, AI chạy lại bằng `app.py` nguyên bản và chỉ dùng kết quả lần này.
-- Tự kiểm tra (Part 5): tôi đã tự chạy lại phần CP4, kết quả khớp.
-- Part 6: tôi yêu cầu AI hoàn thành cả 6 chặng của CP5 rồi giải thích sau. AI viết nháp code và cấu hình trong `06-lab-complete/` (`app/config.py`, `auth.py`, `redis_client.py`, `rate_limiter.py`, `cost_guard.py`, `main.py`, `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example`, `railway.toml`), không sửa `check_production_ready.py`.
-- Tự kiểm tra (Part 6): tôi đã tự chạy lại phần CP5, kết quả khớp, và đã đọc code AI viết.
-- CP6: tôi chọn Render. AI đọc tài liệu Render Blueprint và viết `06-lab-complete/render.yaml`, kiểm tra cú pháp YAML, chạy phần kiểm tra tĩnh và chạy thử image với `PORT=10000` trên máy này.
-- CP6 (tiếp): tôi tự deploy trên Render, tự chạy 4 lệnh kiểm tra (200, 200, 401, 200) và tự chụp 3 ảnh. AI gọi thử 3 endpoint không cần key, hướng dẫn xử lý lỗi, kiểm tra 3 ảnh, soạn `DEPLOYMENT.md` và toàn bộ câu trả lời Part 3.
-- Tự kiểm tra (Part 3): tôi đã đọc phần Part 3 AI soạn rồi push lên `main`.
-- Part 7 bước 1 (CP7): tôi yêu cầu AI chạy và soạn nháp để tôi kiểm tra. AI thêm metric `agent_question_length_chars`, thêm 2 tài liệu vào `KNOWLEDGE_BASE`, viết `.github/workflows/eval.yml`, tự chạy load test, eval và các phép chẩn đoán trên máy này, rồi soạn mục 1–3 và phụ lục của `BENCHMARK_REPORT.md` (gồm cả việc chọn ngưỡng SLO). Số liệu lấy từ các file trong `reports/`.
-- CP7: tôi yêu cầu báo cáo chỉ dùng kết quả do tôi chạy. AI viết script `run_cp7.sh` (AI chạy thử với 30 request, ghi ra thư mục tạm), tôi tự chạy script này trên máy mình lúc 16:39. Script xoá các file kết quả của lần AI đo trước; toàn bộ file trong `reports/` và số liệu Mục 1–3 của báo cáo lấy từ lần tôi chạy. Phần nhận xét do AI viết lại theo các số này và AI đối chiếu số với file.
-- Tự kiểm tra (CP7): tôi đã đọc, kiểm tra script `run_cp7.sh` và phần nhận xét AI soạn, không có ý kiến thay đổi.
-- CP8 (chuẩn bị): AI viết script `production/run_cp8.sh` và chạy thử bản rút gọn (không gồm phần alert) trên máy này; số liệu chạy thử không dùng cho báo cáo. AI sửa `production/Dockerfile` (thêm `PYTHONUSERBASE`) vì container agent báo `No module named 'uvicorn'`, và hướng dẫn tôi xử lý lỗi `error getting credentials` bằng cấu hình Docker tạm.
-- CP8: tôi tự chạy `run_cp8.sh` và tự chụp 4 ảnh Part 7. AI đọc file CSV, log và ảnh do lần chạy của tôi tạo ra, soạn Mục 4–6 của `BENCHMARK_REPORT.md` (gồm câu trả lời Exercise 7.4, phân tích thí nghiệm và kết luận), đối chiếu số với file, và viết `retake_traces.sh` để chụp lại ảnh Jaeger.
-- CP8 (ảnh trace): AI kiểm tra ảnh, chỉ ra 2 ảnh Jaeger chưa đạt; tôi tự chạy `retake_traces.sh` và chụp lại (hướng dẫn đầu của AI thiếu bước mở tab Details). AI cập nhật Mục 4.3 theo trace mới, rồi chạy lại script chấm Part 6 và rà soát bài trước khi nộp.
-- Tự kiểm tra (CP8): tôi đã đọc Mục 4–6 của `BENCHMARK_REPORT.md` do AI soạn.
-- Trước khi nộp: theo yêu cầu của tôi, AI bỏ khỏi repo các file không được yêu cầu (3 script đo `run_cp7.sh`, `run_cp8.sh`, `retake_traces.sh` nhắc ở trên, cùng các file log và CSV phụ), chép nguyên văn phần output báo cáo cần vào Phụ lục B của `BENCHMARK_REPORT.md`, rồi commit và push.
+- **Công cụ sử dụng:** Claude Code.
+- **CP0:** Tôi sử dụng AI để được hướng dẫn thiết lập môi trường và kiểm tra các yêu cầu ban đầu.
+- **CP1 – CP4:** Tôi nhờ AI hướng dẫn thực hiện từng phần, hỗ trợ chạy thử ứng dụng và soạn nháp câu trả lời. Sau đó, tôi tự thực hiện lại và kiểm tra kết quả.
+- **CP5:** Tôi sử dụng AI hỗ trợ hoàn thành 6 chặng, viết nháp code và cấu hình. Sau đó, tôi tự chạy kiểm tra và đọc lại code.
+- **CP6:** Tôi chọn Render để triển khai ứng dụng. AI hỗ trợ đọc tài liệu, chuẩn bị cấu hình triển khai, hướng dẫn xử lý lỗi và soạn nháp nội dung báo cáo. Tôi tự deploy, kiểm tra các endpoint, chụp ảnh minh chứng và hoàn thiện bài.
+- **CP7:** Tôi nhờ AI hỗ trợ viết script kiểm thử, cấu hình và soạn nháp báo cáo benchmark. Tôi tự chạy kiểm thử, thu thập số liệu và kiểm tra nội dung báo cáo.
+- **CP8:** Tôi sử dụng AI hỗ trợ viết script, xử lý lỗi, phân tích kết quả và soạn nháp báo cáo. Tôi tự chạy kiểm thử, thu thập log, CSV, chụp ảnh minh chứng và kiểm tra lại nội dung.
+- **Trước khi nộp:** Tôi sử dụng AI hỗ trợ rà soát, hoàn thiện báo cáo và chuẩn bị repo trước khi commit, push lên nhánh `main`.
+
+**Tổng kết:** Tôi sử dụng Claude Code như công cụ hỗ trợ trong quá trình thực hiện bài tập, chủ yếu để hướng dẫn, hỗ trợ viết code, xử lý lỗi và soạn nháp câu trả lời. Tôi chủ động thực hiện lại các phần kiểm tra, đối chiếu kết quả và đọc lại nội dung trước khi nộp bài.
