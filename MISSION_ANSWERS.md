@@ -580,3 +580,7 @@ Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong
 - Tự kiểm tra (Part 6): tôi đã tự chạy lại phần CP5, kết quả khớp, và đã đọc code AI viết.
 - CP6: tôi chọn Render. AI đọc tài liệu Render Blueprint và viết `06-lab-complete/render.yaml`, kiểm tra cú pháp YAML, chạy phần kiểm tra tĩnh và chạy thử image với `PORT=10000` trên máy này.
 - CP6 (tiếp): tôi tự deploy trên Render, tự chạy 4 lệnh kiểm tra (200, 200, 401, 200) và tự chụp 3 ảnh. AI gọi thử 3 endpoint không cần key, hướng dẫn xử lý lỗi, kiểm tra 3 ảnh, soạn `DEPLOYMENT.md` và toàn bộ câu trả lời Part 3.
+- Tự kiểm tra (Part 3): tôi đã đọc phần Part 3 AI soạn rồi push lên `main`.
+- Part 7 bước 1 (CP7): tôi yêu cầu AI chạy và soạn nháp để tôi kiểm tra. AI thêm metric `agent_question_length_chars`, thêm 2 tài liệu vào `KNOWLEDGE_BASE`, viết `.github/workflows/eval.yml`, tự chạy load test, eval và các phép chẩn đoán trên máy này, rồi soạn mục 1–3 và phụ lục của `BENCHMARK_REPORT.md` (gồm cả việc chọn ngưỡng SLO). Số liệu lấy từ các file trong `reports/`.
+- CP7 (làm lại số liệu): tôi yêu cầu báo cáo chỉ dùng kết quả do tôi chạy. AI viết script `run_cp7.sh` (AI chạy thử với 30 request, ghi ra thư mục tạm), tôi tự chạy script này trên máy mình lúc 16:39. Script xoá các file kết quả của lần AI đo trước; toàn bộ file trong `reports/` và số liệu Mục 1–3 của báo cáo lấy từ lần tôi chạy. Phần nhận xét do AI viết lại theo các số này và AI đối chiếu số với file.
+- Tự kiểm tra (CP7): tôi đã đọc, kiểm tra script `run_cp7.sh` và phần nhận xét AI soạn, không có ý kiến thay đổi.
