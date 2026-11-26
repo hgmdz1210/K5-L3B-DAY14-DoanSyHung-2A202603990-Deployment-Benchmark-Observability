@@ -242,6 +242,56 @@ Dọn dẹp: `docker compose -p k5-day14-docker down -v`.
 - Log của `main.py` mắc lỗi JSON lồng nhau giống Part 1: `{"time":"...","level":"INFO","msg":"{"event": "request", "q_len": 15}"}`.
 - Compose cảnh báo thuộc tính `version` đã lỗi thời.
 
+## Part 3: Cloud Deployment
+
+### Exercise 3.2: Deploy Render
+
+Deploy chính agent của Part 6. Chi tiết ở [DEPLOYMENT.md](DEPLOYMENT.md).
+
+- **URL:** https://day14-agent-f7qk.onrender.com
+- **Cách deploy:** Render Blueprint, Blueprint Path `06-lab-complete/render.yaml`, tạo web service `day14-agent` (Docker) và Key Value `day14-redis`, cùng region Singapore.
+- **Ảnh:** [dashboard.png](screenshots/dashboard.png), [running.png](screenshots/running.png), [test.png](screenshots/test.png)
+
+Kết quả 4 lệnh tự kiểm:
+
+```text
+health    200
+ready     200
+no key    401
+with key  200
+```
+
+### So sánh `railway.toml` và `render.yaml`
+
+So hai file trong `06-lab-complete/`. Nền tảng đã deploy là Render; `railway.toml` chưa được deploy thử.
+
+| Tiêu chí | `railway.toml` | `render.yaml` |
+|---|---|---|
+| Định dạng | TOML | YAML |
+| Phạm vi | Cách build và deploy **một** service | Cả hạ tầng: web service **và** Redis (Key Value) |
+| Build | `builder = "DOCKERFILE"`, `dockerfilePath` | `runtime: docker`, `rootDir`, `dockerfilePath`, `dockerContext` |
+| Vị trí | Dùng khi chạy `railway up` trong `06-lab-complete/` | Mặc định tìm ở gốc repo; ở đây phải chỉ Blueprint Path |
+| Health check | `healthcheckPath = "/health"`, `healthcheckTimeout = 60` | `healthCheckPath: /health` (viết hoa chữ C) |
+| Restart | `restartPolicyType = "ON_FAILURE"`, tối đa 3 lần | Không khai báo |
+| Biến môi trường | Không khai báo trong file; đặt bằng CLI hoặc dashboard | Khai báo trong `envVars` |
+| Secret | Đặt ngoài file | `generateValue: true`: Render tự sinh, file không chứa giá trị |
+| Nối Redis | Tự tạo Redis rồi đặt `REDIS_URL` | `fromService` lấy `connectionString` của `day14-redis` |
+| Region, gói | File không khai báo | `region: singapore`, `plan: free` |
+
+**Vì sao khác:** `railway.toml` là cấu hình cho một service, còn tài nguyên khác được tạo riêng trên Railway. Render Blueprint là dạng Infrastructure as Code mô tả nhiều tài nguyên và liên kết giữa chúng, nên một file dựng được cả agent lẫn Redis.
+
+Hai file mẫu trong `03-cloud-deployment/` dùng cách build khác: `railway.toml` dùng Nixpacks với `startCommand`, `render.yaml` dùng `runtime: python` với `buildCommand`. Bản của Part 6 dùng Dockerfile ở cả hai, nên image trên cloud được build theo cùng công thức với ở local.
+
+### Exercise 3.3: Pipeline CI/CD Cloud Run
+
+Đọc `cloudbuild.yaml` và `service.yaml` trong `03-cloud-deployment/production-cloud-run/`, không deploy.
+
+1. **Test:** cài dependencies và chạy `pytest tests/`; theo chú thích trong file, pipeline được kích hoạt khi push lên `main`.
+2. **Build:** `docker build`, gắn tag `$COMMIT_SHA` và `latest`, dùng `--cache-from` image `latest`.
+3. **Push:** đẩy cả hai tag lên Google Container Registry. Các bước nối nhau bằng `waitFor`, nên bước trước lỗi thì bước sau không chạy.
+4. **Deploy:** `gcloud run deploy` image `$COMMIT_SHA` ở `asia-southeast1`, 1–10 instance, secret `OPENAI_API_KEY` lấy từ Secret Manager.
+5. **`service.yaml`** mô tả service dạng khai báo (concurrency 80, CPU và RAM, liveness `/health`, startup probe `/ready`, secret từ Secret Manager); bước deploy của `cloudbuild.yaml` không dùng file này mà truyền tham số qua dòng lệnh.
+
 ## Part 4: API Security
 
 Test chạy trong WSL2 ở **cổng 8010** (đặt `PORT=8010`) vì cổng 8000 đang bị tiến trình khác giữ. Bản production dùng môi trường riêng (fastapi 0.165.0, uvicorn 0.54.0, pydantic 2.14.4, PyJWT 2.15.1) vì `requirements.txt` yêu cầu `pydantic>=2.11`. Output đã bỏ header `date`, `content-length` và một số header không liên quan; key và token đã che.
@@ -529,3 +579,4 @@ Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong
 - Part 6: tôi yêu cầu AI hoàn thành cả 6 chặng của CP5 rồi giải thích sau. **AI viết toàn bộ code và cấu hình** trong `06-lab-complete/` (`app/config.py`, `auth.py`, `redis_client.py`, `rate_limiter.py`, `cost_guard.py`, `main.py`, `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example`, `railway.toml`), không sửa `check_production_ready.py`. AI tự chạy script chấm và các phép thử thêm trên máy này (input sai, Redis chết, 30 request đồng thời, SIGTERM).
 - Tự kiểm tra (Part 6): tôi đã tự chạy lại phần CP5, kết quả khớp, và đã đọc code AI viết.
 - CP6: tôi chọn Render. AI đọc tài liệu Render Blueprint và viết `06-lab-complete/render.yaml`, kiểm tra cú pháp YAML, chạy phần kiểm tra tĩnh và chạy thử image với `PORT=10000` trên máy này.
+- CP6 (tiếp): tôi tự deploy trên Render, tự chạy 4 lệnh kiểm tra (200, 200, 401, 200) và tự chụp 3 ảnh. AI gọi thử 3 endpoint không cần key, hướng dẫn xử lý lỗi, kiểm tra 3 ảnh, soạn `DEPLOYMENT.md` và toàn bộ câu trả lời Part 3.
