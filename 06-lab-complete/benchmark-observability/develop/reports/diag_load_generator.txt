@@ -1,3 +1,0 @@
-Chay rieng, khong ghi de load_v2_*.json. 300 request moi lan, agent v2 mac dinh.
-c=50   rps=104.13  client p50=196.1   p95=273.0   | server p50=188.9  p95=219.1  | CPU s: server=0.42 load_test=0.72 (wall 3.34s, test 2.88s)
-c=100  rps=42.94   client p50=745.2   p95=4537.6  | server p50=203.4  p95=246.9  | CPU s: server=0.47 load_test=5.47 (wall 7.40s, test 6.99s)

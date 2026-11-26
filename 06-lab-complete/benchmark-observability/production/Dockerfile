@@ -29,6 +29,9 @@ ENV PATH=/home/agent/.local/bin:$PATH
 ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+# Home của user agent là /app (useradd -d /app) nhưng package được copy vào /home/agent/.local,
+# nên phải chỉ rõ chỗ tìm package; thiếu dòng này container báo "No module named 'uvicorn'"
+ENV PYTHONUSERBASE=/home/agent/.local
 
 EXPOSE 8000
 

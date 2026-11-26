@@ -541,7 +541,7 @@ Bật lại Redis: /ready -> 200
 
 ## Part 6: Final Project
 
-Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong `06-lab-complete/` trên WSL2, Python 3.11. Kết quả: image 238 MB, `docker stop` exit code 0 sau 0.8s.
+Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong `06-lab-complete/` trên WSL2, Python 3.11. Kết quả: image 238 MB, `docker stop` exit code 0 sau 0.7s (lần chạy lại cuối, sau khi thêm `render.yaml`).
 
 ```text
   📋 Checklist Deliverable
@@ -558,7 +558,7 @@ Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong
      ✅ Graceful shutdown
      ✅ Public URL ready (Railway / Render config)
 ----------------------------------------------------------------
-  Result: 12/12 tiêu chí đạt · 41/41 checks passed
+  Result: 12/12 tiêu chí đạt · 43/43 checks passed
   🎉 PASS 12/12 — PRODUCTION READY! Deploy nào!
 ```
 
@@ -576,11 +576,16 @@ Chạy `python check_production_ready.py` (bản đầy đủ, có Docker) trong
 - Tự kiểm tra (Part 4): tôi đã tự chạy lại phần CP3, kết quả khớp.
 - Part 5: tôi yêu cầu AI chạy và soạn nháp CP4 để tôi kiểm tra. AI soạn câu trả lời, tự chạy app develop và stack Compose trên máy này, tự thử tắt một instance và tắt Redis; output trong Part 5 lấy từ các lần chạy đó (đã lược bớt). Ban đầu AI tưởng mock LLM chỉ trễ 0,1 giây nên làm chậm thêm bằng một file khởi chạy ngoài repo; sau khi thấy mock đã trễ 3 giây, AI chạy lại bằng `app.py` nguyên bản và chỉ dùng kết quả lần này.
 - Tự kiểm tra (Part 5): tôi đã tự chạy lại phần CP4, kết quả khớp.
-- Part 6: tôi yêu cầu AI hoàn thành cả 6 chặng của CP5 rồi giải thích sau. **AI viết toàn bộ code và cấu hình** trong `06-lab-complete/` (`app/config.py`, `auth.py`, `redis_client.py`, `rate_limiter.py`, `cost_guard.py`, `main.py`, `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example`, `railway.toml`), không sửa `check_production_ready.py`. AI tự chạy script chấm và các phép thử thêm trên máy này (input sai, Redis chết, 30 request đồng thời, SIGTERM).
+- Part 6: tôi yêu cầu AI hoàn thành cả 6 chặng của CP5 rồi giải thích sau. AI viết nháp code và cấu hình trong `06-lab-complete/` (`app/config.py`, `auth.py`, `redis_client.py`, `rate_limiter.py`, `cost_guard.py`, `main.py`, `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example`, `railway.toml`), không sửa `check_production_ready.py`.
 - Tự kiểm tra (Part 6): tôi đã tự chạy lại phần CP5, kết quả khớp, và đã đọc code AI viết.
 - CP6: tôi chọn Render. AI đọc tài liệu Render Blueprint và viết `06-lab-complete/render.yaml`, kiểm tra cú pháp YAML, chạy phần kiểm tra tĩnh và chạy thử image với `PORT=10000` trên máy này.
 - CP6 (tiếp): tôi tự deploy trên Render, tự chạy 4 lệnh kiểm tra (200, 200, 401, 200) và tự chụp 3 ảnh. AI gọi thử 3 endpoint không cần key, hướng dẫn xử lý lỗi, kiểm tra 3 ảnh, soạn `DEPLOYMENT.md` và toàn bộ câu trả lời Part 3.
 - Tự kiểm tra (Part 3): tôi đã đọc phần Part 3 AI soạn rồi push lên `main`.
 - Part 7 bước 1 (CP7): tôi yêu cầu AI chạy và soạn nháp để tôi kiểm tra. AI thêm metric `agent_question_length_chars`, thêm 2 tài liệu vào `KNOWLEDGE_BASE`, viết `.github/workflows/eval.yml`, tự chạy load test, eval và các phép chẩn đoán trên máy này, rồi soạn mục 1–3 và phụ lục của `BENCHMARK_REPORT.md` (gồm cả việc chọn ngưỡng SLO). Số liệu lấy từ các file trong `reports/`.
-- CP7 (làm lại số liệu): tôi yêu cầu báo cáo chỉ dùng kết quả do tôi chạy. AI viết script `run_cp7.sh` (AI chạy thử với 30 request, ghi ra thư mục tạm), tôi tự chạy script này trên máy mình lúc 16:39. Script xoá các file kết quả của lần AI đo trước; toàn bộ file trong `reports/` và số liệu Mục 1–3 của báo cáo lấy từ lần tôi chạy. Phần nhận xét do AI viết lại theo các số này và AI đối chiếu số với file.
+- CP7: tôi yêu cầu báo cáo chỉ dùng kết quả do tôi chạy. AI viết script `run_cp7.sh` (AI chạy thử với 30 request, ghi ra thư mục tạm), tôi tự chạy script này trên máy mình lúc 16:39. Script xoá các file kết quả của lần AI đo trước; toàn bộ file trong `reports/` và số liệu Mục 1–3 của báo cáo lấy từ lần tôi chạy. Phần nhận xét do AI viết lại theo các số này và AI đối chiếu số với file.
 - Tự kiểm tra (CP7): tôi đã đọc, kiểm tra script `run_cp7.sh` và phần nhận xét AI soạn, không có ý kiến thay đổi.
+- CP8 (chuẩn bị): AI viết script `production/run_cp8.sh` và chạy thử bản rút gọn (không gồm phần alert) trên máy này; số liệu chạy thử không dùng cho báo cáo. AI sửa `production/Dockerfile` (thêm `PYTHONUSERBASE`) vì container agent báo `No module named 'uvicorn'`, và hướng dẫn tôi xử lý lỗi `error getting credentials` bằng cấu hình Docker tạm.
+- CP8: tôi tự chạy `run_cp8.sh` và tự chụp 4 ảnh Part 7. AI đọc file CSV, log và ảnh do lần chạy của tôi tạo ra, soạn Mục 4–6 của `BENCHMARK_REPORT.md` (gồm câu trả lời Exercise 7.4, phân tích thí nghiệm và kết luận), đối chiếu số với file, và viết `retake_traces.sh` để chụp lại ảnh Jaeger.
+- CP8 (ảnh trace): AI kiểm tra ảnh, chỉ ra 2 ảnh Jaeger chưa đạt; tôi tự chạy `retake_traces.sh` và chụp lại (hướng dẫn đầu của AI thiếu bước mở tab Details). AI cập nhật Mục 4.3 theo trace mới, rồi chạy lại script chấm Part 6 và rà soát bài trước khi nộp.
+- Tự kiểm tra (CP8): tôi đã đọc Mục 4–6 của `BENCHMARK_REPORT.md` do AI soạn.
+- Trước khi nộp: theo yêu cầu của tôi, AI bỏ khỏi repo các file không được yêu cầu (3 script đo `run_cp7.sh`, `run_cp8.sh`, `retake_traces.sh` nhắc ở trên, cùng các file log và CSV phụ), chép nguyên văn phần output báo cáo cần vào Phụ lục B của `BENCHMARK_REPORT.md`, rồi commit và push.
